@@ -1,7 +1,7 @@
 "        File: lastchange.vim
 "     Authors: Srinath Avadhanula <srinath@fastmail.fm>
 "              Jesse Adams <jesse@techno-geeks.org>
-" Last Change: Sun Dec 05, 2010 at 07:59 PM -0600
+" Last Change: Thu Oct 22, 2015 at 01:25 PM -0700
 " Description: sets the last modification time of the current file. The
 "              next time the time stamp is changed, it is checked against the
 "              time already stamped. this ensures that the time-stamp is
@@ -24,7 +24,7 @@ function! UpdateWithLastMod()
 		return
 	end
 	let pos = line('.').' | normal! '.virtcol('.').'|'
-	0
+
 	if search(s:timeStampLeader) <= 20 && &modifiable
 		let lastdate = matchstr(getline('.'), s:timeStampLeader.'\zs.*')
 		" change time-zone from 'Pacific Standard Time' to 'PST'
@@ -38,13 +38,13 @@ function! UpdateWithLastMod()
 	else
 		return
 	end
-	
+
 	exe pos
 endfunction
 
 augroup LastChange
 	au!
-	au BufWritePre * :call UpdateWithLastMod()
+	au BufWritePre * silent! :call UpdateWithLastMod()
 augroup END
 
 function! <SID>RemoveLastHistoryItem()
