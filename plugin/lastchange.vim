@@ -1,7 +1,7 @@
 "        File: lastchange.vim
 "     Authors: Srinath Avadhanula <srinath@fastmail.fm>
 "              Jesse Adams <jesse@techno-geeks.org>
-" Last Change: Thu Oct 22, 2015 at 01:25 PM -0700
+" Last Change: Thu Oct 22, 2015 at 02:07 PM -0700
 " Description: sets the last modification time of the current file. The
 "              next time the time stamp is changed, it is checked against the
 "              time already stamped. this ensures that the time-stamp is
@@ -9,47 +9,47 @@
 "              not screwed around with every time we save.
 "
 "              To force the time stamp to be not updated, use the command:
-"              		:NOMOD
+"		           :NOMOD
 "              To change it back, use
-"              		:MOD
+"                  :MOD
 
 if !exists('g:timeStampLeader')
-	let s:timeStampLeader = 'Last Change: '
+    let s:timeStampLeader = 'Last Change: '
 else
-	let s:timeStampLeader = g:timeStampLeader
+    let s:timeStampLeader = g:timeStampLeader
 endif
 
 function! UpdateWithLastMod()
-	if exists('b:nomod') && b:nomod
-		return
-	end
-	let pos = line('.').' | normal! '.virtcol('.').'|'
+    if exists('b:nomod') && b:nomod
+        return
+    end
+    let pos = line('.').' | normal! '.virtcol('.').'|'
 
-	if search(s:timeStampLeader) <= 20 && &modifiable
-		let lastdate = matchstr(getline('.'), s:timeStampLeader.'\zs.*')
-		" change time-zone from 'Pacific Standard Time' to 'PST'
-		let newdate = strftime("%a %b %d, %Y at %I:%M %p %z")
-		if lastdate == newdate
-			exe pos
-			return
-		end
-		exe 's/'.s:timeStampLeader.'.*/'.s:timeStampLeader.newdate.'/e'
-		call s:RemoveLastHistoryItem()
-	else
-		return
-	end
+    if search(s:timeStampLeader) <= 20 && &modifiable
+        let lastdate = matchstr(getline('.'), s:timeStampLeader.'\zs.*')
+        " change time-zone from 'Pacific Standard Time' to 'PST'
+        let newdate = strftime("%a %b %d, %Y at %I:%M %p %z")
+        if lastdate == newdate
+            exe pos
+            return
+        end
+        exe 's/'.s:timeStampLeader.'.*/'.s:timeStampLeader.newdate.'/e'
+        call s:RemoveLastHistoryItem()
+    else
+        return
+    end
 
-	exe pos
+    exe pos
 endfunction
 
 augroup LastChange
-	au!
-	au BufWritePre * silent! :call UpdateWithLastMod()
+    au!
+    au BufWritePre * silent! :call UpdateWithLastMod()
 augroup END
 
 function! <SID>RemoveLastHistoryItem()
-  call histdel("/", -1)
-  let @/ = histget("/", -1)
+    call histdel("/", -1)
+    let @/ = histget("/", -1)
 endfunction
 
 com! -nargs=0 NOMOD :let b:nomod = 1
